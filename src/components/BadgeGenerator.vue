@@ -61,8 +61,13 @@ function loadFrame(): any {
 
   vignetteImage.onload = () => {
     const appWidth = window.innerWidth;
-    const zoomLevel:number = vignetteImage.width > appWidth? Math.ceil(100* appWidth/vignetteImage.width): 100;
-    console.log(`Zoom level computed to on ${appWidth} with frame ${vignetteImage.width}  to be ${zoomLevel}`);
+    const zoomLevel: number =
+      vignetteImage.width > appWidth
+        ? Math.ceil((100 * appWidth) / vignetteImage.width)
+        : 100;
+    console.log(
+      `Zoom level computed to on ${appWidth} with frame ${vignetteImage.width}  to be ${zoomLevel}`
+    );
     zoom.value = zoomLevel;
 
     const squared = cropImageToSquare(vignetteImage);
@@ -122,7 +127,7 @@ const scribble = (src: HTMLCanvasElement, dest: HTMLCanvasElement) => {
         min="10"
         max="100"
         :value="zoom"
-        @change="(e:Event)=> {zoom = e.target.value}"
+        @change="(e:Event)=> {if (e && e.target) zoom= Number((e.target as HTMLInputElement).value);}"
       />
       {{ zoom }}%. (does not affect image size, only the display here.)
     </p>
