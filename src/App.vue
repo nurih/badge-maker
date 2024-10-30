@@ -3,6 +3,12 @@ import { ref } from "vue";
 import BadgeGenerator from "./components/BadgeGenerator.vue";
 
 const canvasSize = ref<number>(512);
+
+const onImageSizeChangd = (e: Event) => {
+  if (e && e.target) {
+    canvasSize.value = Number((e.target as HTMLInputElement).value);
+  }
+};
 </script>
 
 <template>
@@ -12,12 +18,7 @@ const canvasSize = ref<number>(512);
       for badges on your favorite social media site.
     </p>
 
-    <input
-      type="range"
-      min="256"
-      max="2048"
-      @change="(e)=> canvasSize = Number((e.target as HTMLInputElement).value)"
-    />
+    <input type="range" min="256" max="2048" @change="onImageSizeChangd" />
 
     <p>
       Final image size will be <b>{{ canvasSize }}&nbsp;pixels</b>. Changing the size will
