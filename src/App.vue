@@ -16,19 +16,15 @@ const canvasSize = ref<number>(512);
       type="range"
       min="256"
       max="2048"
-      @change="(e:Event)=> e.target && (canvasSize = e.target.value)"
+      @change="(e)=> canvasSize = Number((e.target as HTMLInputElement).value)"
     />
 
-    
     <p>
       Final image size will be <b>{{ canvasSize }}&nbsp;pixels</b>. Changing the size will
       reset input file and you will need to upload it again.
     </p>
   </div>
-  <BadgeGenerator
-    frame-name="pass-badge.png"
-    :canvas-size="Number(canvasSize)"
-  />
+  <BadgeGenerator frame-name="pass-badge.png" :canvas-size="Number(canvasSize)" />
 </template>
 
 <style scoped></style>
