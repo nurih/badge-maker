@@ -1,15 +1,19 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 
-const maxBadgePixels = 800;
-const { frameName = "my-frame.png" } = defineProps<{ frameName?: string }>();
+const props = defineProps({
+  frameName: { type: String, required: true },
+  canvasSize: { type: Number, required: true },
+});
 
-const canvas = ref<HTMLCanvasElement | null>(null);
+const zoom = ref<Number>(100);
+
+const mainCanvas = ref<HTMLCanvasElement | null>(null);
 const imageLoaded = ref(false);
-const canvasWidth = ref(maxBadgePixels);
-const canvasHeight = ref(maxBadgePixels);
+
 let headshotImage = new Image();
 let vignetteImage = new Image();
+
 const headshotName = ref("");
 
 onMounted(loadFrame);
@@ -27,38 +31,44 @@ const onFileChange = (event: Event) => {
       };
     };
     reader.readAsDataURL(file);
+  } else {
+    headshotName.value = "";
   }
 };
 
 const drawImages = () => {
-  if (canvas.value) {
-    const ctx = canvas.value.getContext("2d");
+  if (mainCanvas.value) {
+    const ctx = mainCanvas.value.getContext("2d");
     if (ctx) {
-      ctx.clearRect(0, 0, canvasWidth.value, canvasHeight.value);
-      ctx.drawImage(headshotImage, 0, 0, canvasWidth.value, canvasHeight.value);
-      ctx.drawImage(vignetteImage, 0, 0, canvasWidth.value + 1, canvasHeight.value + 1);
+      ctx.clearRect(0, 0, props.canvasSize, props.canvasSize);
+      ctx.drawImage(headshotImage, 0, 0, props.canvasSize, props.canvasSize);
+      ctx.drawImage(vignetteImage, 0, 0, props.canvasSize + 1, props.canvasSize + 1);
     }
   }
 };
 
 const downloadImage = () => {
-  if (canvas.value) {
+  if (mainCanvas.value) {
     const link = document.createElement("a");
-    link.href = canvas.value.toDataURL("image/png");
+    link.href = mainCanvas.value.toDataURL("image/png");
     link.download = `Framed-${headshotName.value}`;
     link.click();
   }
 };
 
 function loadFrame(): any {
-  vignetteImage.src = frameName;
+  vignetteImage.src = props.frameName;
 
   vignetteImage.onload = () => {
+    const appWidth = window.innerWidth;
+    const zoomLevel:number = vignetteImage.width > appWidth? Math.ceil(100* appWidth/vignetteImage.width): 100;
+    console.log(`Zoom level computed to on ${appWidth} with frame ${vignetteImage.width}  to be ${zoomLevel}`);
+    zoom.value = zoomLevel;
+
     const squared = cropImageToSquare(vignetteImage);
-    canvasWidth.value = Math.min(vignetteImage.width, maxBadgePixels);
-    canvasHeight.value = Math.min(vignetteImage.width, maxBadgePixels);
-    if (squared && canvas.value) {
-      scribble(squared, canvas.value);
+
+    if (squared && mainCanvas.value) {
+      scribble(squared, mainCanvas.value);
     }
   };
 }
@@ -89,6 +99,7 @@ const downloadedFileName = () => {
 
 const scribble = (src: HTMLCanvasElement, dest: HTMLCanvasElement) => {
   if (src && dest) {
+    console.log(`scribble ${src.width} => ${dest.width}`);
     const sourceContext = src.getContext("2d");
     const destinationContext = dest.getContext("2d");
 
@@ -103,24 +114,42 @@ const scribble = (src: HTMLCanvasElement, dest: HTMLCanvasElement) => {
 
 <template>
   <div class="badge-generator">
+    <input type="file" @change="onFileChange" accept="image/*" :key="canvasSize" />
     <p>
-      Upload a square headshot, and it will let you download a framed version, suitable
-      for badges on your favorite social media site.
+      Zoom
+      <input
+        type="range"
+        min="10"
+        max="100"
+        :value="zoom"
+        @change="(e:Event)=> {zoom = e.target.value}"
+      />
+      {{ zoom }}%. (does not affect image size, only the display here.)
     </p>
-    <input type="file" @change="onFileChange" accept="image/*" />
-    <em v-if="headshotName != ''">
-      <button @click="downloadImage" :disabled="!imageLoaded">Download Badge</button>
-      Badge will be named: <b>{{ downloadedFileName() }}</b>
-    </em>
+    <div v-if="headshotName != ''">
+      <p>
+        Badge will be named: <b>{{ downloadedFileName() }}</b>
+      </p>
+      <p>
+        <button @click="downloadImage" :disabled="!imageLoaded">Download Badge</button>
+      </p>
+    </div>
     <div v-if="headshotName">
-      <canvas ref="canvas" :width="canvasWidth" :height="canvasHeight"></canvas>
+      <canvas
+        id="mainCanvas"
+        ref="mainCanvas"
+        :width="canvasSize"
+        :height="canvasSize"
+        :style="{ zoom: zoom + '%' }"
+      ></canvas>
     </div>
     <div v-else>
       <img
         :src="frameName"
-        :width="maxBadgePixels"
-        :height="maxBadgePixels"
+        :width="canvasSize"
+        :height="canvasSize"
         alt="frame file name"
+        :style="{ zoom: zoom + '%' }"
       />
     </div>
   </div>
@@ -140,9 +169,11 @@ canvas {
   margin-bottom: 1rem;
 }
 
-button,
-input {
-  padding: 10px 20px;
-  font-size: 16px;
+button {
+  background-color: greenyellow;
+}
+
+#mainCanvas {
+  border: 1px solid grey;
 }
 </style>
