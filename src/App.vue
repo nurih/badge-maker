@@ -16,7 +16,7 @@ const canvasSize = ref<number>(512);
       type="range"
       min="256"
       max="2048"
-      @change="(e:Event)=> canvasSize = e.target.value"
+      @change="(e:Event)=> e.target && (canvasSize = e.target.value)"
     />
 
     
