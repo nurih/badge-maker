@@ -117,10 +117,10 @@ onMounted(() => {
     canvas.value.width = container.value!.clientWidth;
     canvas.value.height = container.value!.clientHeight;
     ctx = canvas.value.getContext("2d")!;
-    
+
     scale.value = canvas.value!.width / Math.max(headshot.width, headshot.height);
     drawImages();
-    
+
     container.value!.addEventListener("wheel", handleWheel);
     container.value!.addEventListener("mousedown", handleMouseDown);
     container.value!.addEventListener("touchstart", handleTouchStart);
@@ -159,10 +159,7 @@ const downloadImage = () => {
 
 <template>
   <button @click="downloadImage">Download</button>
-  <div class="thumbs flex-container">
-    <img :src="frame.src" />
-    <img :src="headshot.src" />
-  </div>
+
   <fieldset>
     <legend>Zoomed {{ (100 * scale).toFixed(2) }}%</legend>
 
@@ -192,16 +189,5 @@ canvas {
   display: block;
   width: 100%;
   height: 100%;
-}
-.thumbs {
-  display: flex;
-  justify-content: flex-end;
-}
-.thumbs > img {
-  margin-top: 0.5rem;
-  margin-left: 0.5rem;
-
-  height: 90px;
-  width: 90px;
 }
 </style>

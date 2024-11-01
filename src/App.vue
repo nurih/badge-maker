@@ -62,7 +62,10 @@ const headshotUploadHandler = (e: UploadedImage) => {
       <input type="range" min="64" :max="maxPixelSize" @change="onPixelSizeChanged" />
       {{ maxPixelSize }}
     </p>
-
+    <div class="thumbs flex-container">
+      <img :src="frame.src" />
+      <img v-if="headshot" :src="headshot.src" />
+    </div>
     <BadgeMaker
       v-if="headshot"
       :headshot="headshot"
@@ -88,6 +91,17 @@ input[type="range"] {
   width: 80%;
 }
 
+.thumbs {
+  display: flex;
+  justify-content: flex-end;
+}
+.thumbs > img {
+  margin-top: 0.5rem;
+  margin-left: 0.5rem;
+
+  height: 90px;
+  width: 90px;
+}
 footer {
   font-size: xx-small;
 }
