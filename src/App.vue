@@ -42,7 +42,6 @@ const headshotUploadHandler = (e: UploadedImage) => {
 <template>
   <div class="card">
     <h1>Social Media Badge Maker</h1>
-
     <p>
       Upload a square headshot, and it will let you download a framed version, suitable
       for badges on your favorite social media site.
@@ -63,8 +62,8 @@ const headshotUploadHandler = (e: UploadedImage) => {
       {{ maxPixelSize }}
     </p>
     <div class="thumbs flex-container">
-      <img :src="frame.src" />
-      <img v-if="headshot" :src="headshot.src" />
+      <img :src="frame.src" :alt="`frame ${frame.width}x${frame.height}`"/>
+      <img v-if="headshot" :src="headshot.src" :alt="`headshot ${headshot.width}x${headshot.height}`"/>
     </div>
     <BadgeMaker
       v-if="headshot"

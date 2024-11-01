@@ -119,6 +119,7 @@ onMounted(() => {
     ctx = canvas.value.getContext("2d")!;
 
     scale.value = canvas.value!.width / Math.max(headshot.width, headshot.height);
+
     drawImages();
 
     container.value!.addEventListener("wheel", handleWheel);
@@ -147,7 +148,6 @@ const downloadImage = () => {
     try {
       const link = document.createElement("a");
       link.href = makeFinal().toDataURL("image/png");
-      // link.href = canvas.value.toDataURL("image/png");
       link.download = `framed_${pixelCount}_${downloadedFileName}`;
       link.click();
     } catch (error) {
