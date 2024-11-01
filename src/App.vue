@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import BADGEMAKER_FRAME_URI from "./frameChoice.ts";
+import BADGEMAKER_FRAME_URI from "./buildSettings.ts";
 import BadgeMaker from "./components/BadgeMaker.vue";
 import HeadshotUpload, { UploadedImage } from "./components/HeadshotUpload.vue";
-
+const buildTime = __BUILD_TIME__;
 const pixelSize = ref<number>(256);
 
 const onPixelSizeChanged = (e: Event) => {
@@ -73,10 +73,13 @@ const headshotUploadHandler = (e: UploadedImage) => {
     />
   </div>
   <footer>
-    Frame file
-    <em>
-      {{ BADGEMAKER_FRAME_URI }}
-    </em>
+    <p>
+      Frame file
+      <em>
+        {{ BADGEMAKER_FRAME_URI }}
+      </em>
+      {{ buildTime }}
+    </p>
   </footer>
 </template>
 
