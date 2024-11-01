@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
-
+import BADGEMAKER_FRAME_URI from "./frameChoice.ts";
 import BadgeMaker from "./components/BadgeMaker.vue";
 import HeadshotUpload, { UploadedImage } from "./components/HeadshotUpload.vue";
 
@@ -16,7 +16,9 @@ const onPixelSizeChanged = (e: Event) => {
 const headshot = ref<HTMLImageElement>();
 
 const frame = new Image();
-frame.src = "pass-badge.png";
+
+frame.src = BADGEMAKER_FRAME_URI;
+
 frame.setAttribute("crossOrigin", "anonymous");
 
 const fileName = ref("");
@@ -39,18 +41,22 @@ const headshotUploadHandler = (e: UploadedImage) => {
 
 <template>
   <div class="card">
-  <h1>Social Media Badge Maker</h1>
-  <p>
-    Upload a square headshot, and it will let you download a framed version, suitable for
-    badges on your favorite social media site.
-  </p>
+    <h1>Social Media Badge Maker</h1>
+
+    <p>
+      Upload a square headshot, and it will let you download a framed version, suitable
+      for badges on your favorite social media site.
+    </p>
   </div>
 
   <div class="card">
     <HeadshotUpload @headshot-uploaded="headshotUploadHandler" />
   </div>
   <div class="card">
-    <p>Slide to change final badge width and height. Currently <b>{{ pixelSize }} x {{ pixelSize }} pixels</b>.</p>
+    <p>
+      Slide to change final badge width and height. Currently
+      <b>{{ pixelSize }} x {{ pixelSize }} pixels</b>.
+    </p>
     <p>
       64
       <input type="range" min="64" :max="maxPixelSize" @change="onPixelSizeChanged" />
@@ -66,10 +72,20 @@ const headshotUploadHandler = (e: UploadedImage) => {
       :key="fileName"
     />
   </div>
+  <footer>
+    Frame file
+    <em>
+      {{ BADGEMAKER_FRAME_URI }}
+    </em>
+  </footer>
 </template>
 
 <style scoped>
 input[type="range"] {
   width: 80%;
+}
+
+footer {
+  font-size: xx-small;
 }
 </style>
