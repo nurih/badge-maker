@@ -1,31 +1,75 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import BadgeGenerator from "./components/BadgeGenerator.vue";
+import { ref, computed } from "vue";
 
-const canvasSize = ref<number>(512);
+import BadgeMaker from "./components/BadgeMaker.vue";
+import HeadshotUpload, { UploadedImage } from "./components/HeadshotUpload.vue";
 
-const onImageSizeChangd = (e: Event) => {
+const pixelSize = ref<number>(256);
+
+const onPixelSizeChanged = (e: Event) => {
   if (e && e.target) {
-    canvasSize.value = Number((e.target as HTMLInputElement).value);
+    pixelSize.value = Number((e.target as HTMLInputElement).value);
+    console.log(`pixelSize now ${pixelSize.value}`);
   }
+};
+
+const headshot = ref<HTMLImageElement>();
+
+const frame = new Image();
+frame.src = "pass-badge.png";
+frame.setAttribute("crossOrigin", "anonymous");
+
+const fileName = ref("");
+
+const maxPixelSize = computed(() => {
+  const result: number = Math.min(
+    frame.width,
+    frame.height,
+    headshot.value?.width || Number.MAX_SAFE_INTEGER,
+    headshot.value?.height || Number.MAX_SAFE_INTEGER
+  );
+  return result;
+});
+
+const headshotUploadHandler = (e: UploadedImage) => {
+  headshot.value = e.image;
+  fileName.value = e.fileName;
 };
 </script>
 
 <template>
   <div class="card">
-    <p>
-      Upload a square headshot, and it will let you download a framed version, suitable
-      for badges on your favorite social media site.
-    </p>
-
-    <input type="range" min="256" max="2048" @change="onImageSizeChangd" />
-
-    <p>
-      Final image size will be <b>{{ canvasSize }}&nbsp;pixels</b>. Changing the size will
-      reset input file and you will need to upload it again.
-    </p>
+  <h1>Social Media Badge Maker</h1>
+  <p>
+    Upload a square headshot, and it will let you download a framed version, suitable for
+    badges on your favorite social media site.
+  </p>
   </div>
-  <BadgeGenerator frame-name="pass-badge.png" :canvas-size="Number(canvasSize)" />
+
+  <div class="card">
+    <HeadshotUpload @headshot-uploaded="headshotUploadHandler" />
+  </div>
+  <div class="card">
+    <p>Slide to change final badge width and height. Currently <b>{{ pixelSize }} x {{ pixelSize }} pixels</b>.</p>
+    <p>
+      64
+      <input type="range" min="64" :max="maxPixelSize" @change="onPixelSizeChanged" />
+      {{ maxPixelSize }}
+    </p>
+
+    <BadgeMaker
+      v-if="headshot"
+      :headshot="headshot"
+      :frame="frame"
+      :downloaded-file-name="fileName"
+      :pixel-count="pixelSize"
+      :key="fileName"
+    />
+  </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+input[type="range"] {
+  width: 80%;
+}
+</style>

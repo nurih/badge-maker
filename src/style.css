@@ -24,12 +24,12 @@ a:hover {
 }
 
 body {
-  margin: 3rem;
+  
   display: flex;
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  background-color: rgb(224, 224, 231);
+  background-color: #cabfca;
 }
 
 h1 {
