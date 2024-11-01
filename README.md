@@ -44,13 +44,18 @@ Users upload their headshot from their device. The headshot is not stored on dis
 > Make sure the headshot you upload is suqare: _equal height and width_. 
 
 ## Frame choice
-The frame image is hard coded into the app here: https://github.com/nurih/pass-badge-maker/blob/0722ded75bae298ca57aacefa4f5934d430cd6ac/src/App.vue#L28 , in the example here, the frame image is named `pass-badge.png`. The frame image should be placed in the [/public](/public) directory.
-The image itself is a transparent PNG and will be overlayed on top of the uploaded headshot.
+
+Frame image files should be placed in the folder [/public](/public).
+
+The frame image used by the app is determined by the environment variable `VITE_BADGEMAKER_FRAME_URI`. It is set at build time.
+
+The image name corresponds to the file name of the transparent PNG file. 
 
 > Make sure the frame you use is suqare: _equal height and width_.
 
-## Overlay
-The current overlay slaps the frame on the headshot and stretches or shrinks the headshot to the square dimension of the frame. To avoid distortion, use a square headshot.
+## Overlay Process
+
+The current overlay slaps the frame on the headshot and stretches or shrinks the headshot to the square dimension of the frame. The image is drawn to the lesser of the height and width dimensions, wich may lead to cropping if images are not square. To avoid distortion, use a square headshot. Images are aligned to the top left corner.
 
 ## Demo / Run
 
