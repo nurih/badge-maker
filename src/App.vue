@@ -18,19 +18,19 @@ const headshot = ref<HTMLImageElement>();
 const frame = new Image();
 
 frame.src = BADGEMAKER_FRAME_URI;
-
 frame.setAttribute("crossOrigin", "anonymous");
 
 const fileName = ref("");
 
 const maxPixelSize = computed(() => {
-  const result: number = Math.min(
-    frame.width,
-    frame.height,
-    headshot.value?.width || Number.MAX_SAFE_INTEGER,
-    headshot.value?.height || Number.MAX_SAFE_INTEGER
-  );
-  return result;
+  if (headshot.value)
+    return Math.min(
+      frame.width,
+      frame.height,
+      headshot.value.width,
+      headshot.value.height
+    );
+  return Math.min(frame.width, frame.height);
 });
 
 const headshotUploadHandler = (e: UploadedImage) => {
@@ -52,19 +52,31 @@ const headshotUploadHandler = (e: UploadedImage) => {
     <HeadshotUpload @headshot-uploaded="headshotUploadHandler" />
   </div>
   <div class="card">
+    <div class="thumbs flex-container">
+      <img :src="frame.src" :alt="`frame ${frame.width}x${frame.height}`" />
+      <img
+        v-if="headshot"
+        :src="headshot.src"
+        :alt="`headshot ${headshot.width}x${headshot.height}`"
+      />
+    </div>
     <p>
       Slide to change final badge width and height. Currently
       <b>{{ pixelSize }} x {{ pixelSize }} pixels</b>.
     </p>
     <p>
       64
-      <input type="range" min="64" :max="maxPixelSize" @change="onPixelSizeChanged" />
+      <input
+        class="slider"
+        type="range"
+        min="64"
+        :key="maxPixelSize"
+        :max="maxPixelSize"
+        @change="onPixelSizeChanged"
+        title="Final image pixel size selector"
+      />
       {{ maxPixelSize }}
     </p>
-    <div class="thumbs flex-container">
-      <img :src="frame.src" :alt="`frame ${frame.width}x${frame.height}`"/>
-      <img v-if="headshot" :src="headshot.src" :alt="`headshot ${headshot.width}x${headshot.height}`"/>
-    </div>
     <BadgeMaker
       v-if="headshot"
       :headshot="headshot"
@@ -103,5 +115,36 @@ input[type="range"] {
 }
 footer {
   font-size: xx-small;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 25px;
+  background: #ffffff;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: 0.2s;
+  transition: opacity 0.2s;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 42px;
+  background: #8400ff;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 24px;
+  height: 42px;
+  background: #8400ff;
+  cursor: pointer;
 }
 </style>
