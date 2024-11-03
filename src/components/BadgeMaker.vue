@@ -175,7 +175,7 @@ const downloadImage = () => {
   padding-top: 100%;
   overflow: hidden;
   position: relative;
-  border: green 2px double;
+  border: #898989 1px dotted;
 }
 div.container > * {
   position: absolute;

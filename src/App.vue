@@ -119,9 +119,10 @@ footer {
 
 .slider {
   -webkit-appearance: none;
+  appearance: none;
   width: 100%;
   height: 25px;
-  background: #ffffff;
+  background: #989898;
   outline: none;
   opacity: 0.7;
   -webkit-transition: 0.2s;
@@ -137,14 +138,14 @@ footer {
   appearance: none;
   width: 24px;
   height: 42px;
-  background: #8400ff;
+  background: #444;
   cursor: pointer;
 }
 
 .slider::-moz-range-thumb {
   width: 24px;
   height: 42px;
-  background: #8400ff;
+  background: #444;
   cursor: pointer;
 }
 </style>
