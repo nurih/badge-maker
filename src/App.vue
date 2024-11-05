@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import BadgeMaker from "./components/BadgeMaker.vue";
 import BADGEMAKER_FRAME_URI from "./buildSettings.ts";
 import Card from "primevue/card";
@@ -115,6 +115,10 @@ input[type="range"] {
   width: 80%;
 }
 
+.p-card {
+  margin-bottom: 1rem;
+  border-radius: 0;
+}
 .thumbs {
   display: flex;
   justify-content: flex-end;

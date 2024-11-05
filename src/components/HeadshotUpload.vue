@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import FileUpload, { FileUploadSelectEvent } from "primevue/fileupload";
+
 const headshotImage: HTMLImageElement = new Image();
 
 export interface UploadedImage {
@@ -8,8 +10,8 @@ export interface UploadedImage {
 
 const emitImage = defineEmits<{ headshotUploaded: UploadedImage[] }>();
 
-const onFileChange = (event: Event) => {
-  const file = (event.target as HTMLInputElement).files?.[0];
+const onFileChange = (event: FileUploadSelectEvent) => {
+  const file = (event.originalEvent.target as HTMLInputElement).files?.[0];
   if (file) {
     const reader = new FileReader();
     reader.onload = () => {
@@ -27,7 +29,12 @@ const onFileChange = (event: Event) => {
 </script>
 <template>
   <p>
-    Select a headshot image:
-    <input type="file" @change="onFileChange" accept="image/*" />
+    <FileUpload
+      mode="basic"
+      accept="image/*"
+      @select="onFileChange"
+      :auto="true"
+      choose-label="Choose a headshot"
+    ></FileUpload>
   </p>
 </template>

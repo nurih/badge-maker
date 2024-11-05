@@ -10,7 +10,7 @@ const { maxPixels } = defineProps<{ maxPixels: number }>();
   <InputNumber
     :min="64"
     :max="maxPixels"
-    :step="10"
+    :step="32"
     inputId="horizontal-buttons"
     showButtons
     buttonLayout="horizontal"
