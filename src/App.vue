@@ -1,91 +1,102 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import BADGEMAKER_FRAME_URI from "./buildSettings.ts";
 import BadgeMaker from "./components/BadgeMaker.vue";
+import BADGEMAKER_FRAME_URI from "./buildSettings.ts";
+import Card from "primevue/card";
 import HeadshotUpload, { UploadedImage } from "./components/HeadshotUpload.vue";
+import PixelPicker from "./components/PixelPicker.vue";
 const buildTime = __BUILD_TIME__;
 const pixelSize = ref<number>(256);
 
-const onPixelSizeChanged = (e: Event) => {
-  if (e && e.target) {
-    pixelSize.value = Number((e.target as HTMLInputElement).value);
-    console.log(`pixelSize now ${pixelSize.value}`);
-  }
-};
-
 const headshot = ref<HTMLImageElement>();
-
 const frame = new Image();
 
 frame.src = BADGEMAKER_FRAME_URI;
 frame.setAttribute("crossOrigin", "anonymous");
+frame.onload = () => {
+  const p = allowedMaxSize();
+  console.log("Loaded frame!");
+  maxPixelSize.value = p;
+  console.log("Loaded frame!" + p);
+};
 
 const fileName = ref("");
 
-const maxPixelSize = computed(() => {
-  if (headshot.value)
+const maxPixelSize = ref(256);
+
+const allowedMaxSize = () => {
+  if (headshot.value && frame) {
+    console.log("Got frame AND headshot");
     return Math.min(
       frame.width,
       frame.height,
       headshot.value.width,
       headshot.value.height
     );
-  return Math.min(frame.width, frame.height);
-});
+  }
+  if (frame) {
+    console.log("Got frame only");
+    return Math.min(frame.width, frame.height);
+  }
+  console.log("Got no frame no headshot");
+  return 640;
+};
 
 const headshotUploadHandler = (e: UploadedImage) => {
   headshot.value = e.image;
   fileName.value = e.fileName;
+  maxPixelSize.value = allowedMaxSize();
 };
 </script>
 
 <template>
-  <div class="card">
-    <h1>Social Media Badge Maker</h1>
-    <p>
-      Upload a square headshot, and it will let you download a framed version, suitable
-      for badges on your favorite social media site.
-    </p>
-  </div>
+  <Card>
+    <template #title>Social Media Badge Maker</template>
+    <template #content>
+      <p>
+        Upload a square headshot, and it will let you download a framed version, suitable
+        for badges on your favorite social media site.
+      </p>
+    </template>
+  </Card>
 
-  <div class="card">
-    <HeadshotUpload @headshot-uploaded="headshotUploadHandler" />
-  </div>
-  <div class="card">
-    <div class="thumbs flex-container">
-      <img :src="frame.src" :alt="`frame ${frame.width}x${frame.height}`" />
-      <img
+  <Card
+    ><template #content>
+      <HeadshotUpload @headshot-uploaded="headshotUploadHandler" />
+    </template>
+  </Card>
+  <Card>
+    <template #content>
+      <div class="thumbs flex-container">
+        <img :src="frame.src" :alt="`frame ${frame.width}x${frame.height}`" />
+        <img
+          v-if="headshot"
+          :src="headshot.src"
+          :alt="`headshot ${headshot.width}x${headshot.height}`"
+        />
+      </div>
+      <p>
+        Slide to change final badge width and height. Currently
+        <b>{{ pixelSize }} x {{ pixelSize }} pixels</b>.
+      </p>
+      <p>
+        <PixelPicker
+          v-on:selected-size="(n) => (pixelSize = n)"
+          :max-pixels="maxPixelSize"
+          :key="maxPixelSize"
+        />
+        {{ pixelSize }} ({{ maxPixelSize }})
+      </p>
+      <BadgeMaker
         v-if="headshot"
-        :src="headshot.src"
-        :alt="`headshot ${headshot.width}x${headshot.height}`"
+        :headshot="headshot"
+        :frame="frame"
+        :downloaded-file-name="fileName"
+        :pixel-count="pixelSize"
+        :key="fileName"
       />
-    </div>
-    <p>
-      Slide to change final badge width and height. Currently
-      <b>{{ pixelSize }} x {{ pixelSize }} pixels</b>.
-    </p>
-    <p>
-      64
-      <input
-        class="slider"
-        type="range"
-        min="64"
-        :key="maxPixelSize"
-        :max="maxPixelSize"
-        @change="onPixelSizeChanged"
-        title="Final image pixel size selector"
-      />
-      {{ maxPixelSize }}
-    </p>
-    <BadgeMaker
-      v-if="headshot"
-      :headshot="headshot"
-      :frame="frame"
-      :downloaded-file-name="fileName"
-      :pixel-count="pixelSize"
-      :key="fileName"
-    />
-  </div>
+    </template>
+  </Card>
   <footer>
     <p>
       Frame file
@@ -96,7 +107,9 @@ const headshotUploadHandler = (e: UploadedImage) => {
     </p>
   </footer>
 </template>
-
+<style lang="scss">
+@import "/node_modules/primeicons/primeicons.css";
+</style>
 <style scoped>
 input[type="range"] {
   width: 80%;

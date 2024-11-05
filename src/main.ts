@@ -1,5 +1,14 @@
 import { createApp } from 'vue'
 import './style.css'
 import App from './App.vue'
+import PrimeVue from 'primevue/config'
+import Aura from '@primevue/themes/aura';
+import { Button, Card } from 'primevue';
+const app = createApp(App);
 
-createApp(App).mount('#app')
+app.use(PrimeVue, {
+  theme: { preset: Aura }
+})
+app.component('Button', Button);
+app.component('Card', Card);
+app.mount('#app')
