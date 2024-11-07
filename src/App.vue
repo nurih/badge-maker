@@ -60,13 +60,10 @@ const headshotUploadHandler = (e: UploadedImage) => {
     </template>
   </Card>
 
-  <Card
-    ><template #content>
-      <HeadshotUpload @headshot-uploaded="headshotUploadHandler" />
-    </template>
-  </Card>
   <Card>
     <template #content>
+      <HeadshotUpload @headshot-uploaded="headshotUploadHandler" />
+
       <div class="thumbs flex-container">
         <img :src="frame.src" :alt="`frame ${frame.width}x${frame.height}`" />
         <img
@@ -77,15 +74,12 @@ const headshotUploadHandler = (e: UploadedImage) => {
       </div>
       <p>
         Slide to change final badge width and height. Currently
-        <b>{{ pixelSize }} x {{ pixelSize }} pixels</b>.
-      </p>
-      <p>
+        <b>{{ pixelSize }} X {{ pixelSize }} pixels</b>.
         <PixelPicker
           v-on:selected-size="(n) => (pixelSize = n)"
           :max-pixels="maxPixelSize"
           :key="maxPixelSize"
         />
-        {{ pixelSize }} ({{ maxPixelSize }})
       </p>
       <BadgeMaker
         v-if="headshot"

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-
+import { Button } from "primevue";
 const container = ref<HTMLDivElement | null>(null);
 const canvas = ref<HTMLCanvasElement | null>(null);
 let ctx: CanvasRenderingContext2D | null = null;
@@ -158,7 +158,7 @@ const downloadImage = () => {
 </script>
 
 <template>
-  <button @click="downloadImage">Download</button>
+  <Button @click="downloadImage">Download</Button>
 
   <fieldset>
     <legend>Zoomed {{ (100 * scale).toFixed(2) }}%</legend>
