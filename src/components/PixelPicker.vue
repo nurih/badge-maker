@@ -17,6 +17,7 @@ const { maxPixels } = defineProps<{ maxPixels: number }>();
     mode="decimal"
     fluid
     @update:modelValue="(n) => $emit('selectedSize', n)"
+    :modelValue="maxPixels"
   >
     <template #incrementicon>
       <span class="pi pi-plus" />

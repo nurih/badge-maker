@@ -73,8 +73,8 @@ const headshotUploadHandler = (e: UploadedImage) => {
         />
       </div>
       <p>
-        Slide to change final badge width and height. Currently
-        <b>{{ pixelSize }} X {{ pixelSize }} pixels</b>.
+        Slide to change the final badge width and height. Currently
+        <b>{{ pixelSize }} X {{ pixelSize }} pixels</b>. Any number between 64 and {{ maxPixelSize }} is allowed.
         <PixelPicker
           v-on:selected-size="(n) => (pixelSize = n)"
           :max-pixels="maxPixelSize"
