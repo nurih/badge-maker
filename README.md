@@ -1,9 +1,8 @@
 # Pass Badge Maker
 
-This app that generates a "badge" from a frame image and a headshot. 
+This app that generates a "badge" from a frame image and a headshot.
 
 It is intended to create framed headshot of the kind used for temporary or permanent avatars on social networks.
-
 
 Given a headshot / photo:
 
@@ -26,6 +25,7 @@ And a frame:
 ¶              ¶
 ¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶
 ```
+
 It will produce a combined image that you can download and use as your LinkedIn avatar or whatnot.
 
 ```shell
@@ -39,9 +39,10 @@ It will produce a combined image that you can download and use as your LinkedIn 
 ```
 
 ## Headshot Selection
+
 Users upload their headshot from their device. The headshot is not stored on disk and there is no server-side code or network transmission occuring beyond loading of the app into the browser initially.
 
-> Make sure the headshot you upload is suqare: _equal height and width_. 
+> Make sure the headshot you upload is suqare: _equal height and width_.
 
 ## Frame choice
 
@@ -49,7 +50,7 @@ Frame image files should be placed in the folder [/public](/public).
 
 The frame image used by the app is determined by the environment variable `VITE_BADGEMAKER_FRAME_URI`. It is set at build time.
 
-The image name corresponds to the file name of the transparent PNG file. 
+The image name corresponds to the file name of the transparent PNG file.
 
 > Make sure the frame you use is suqare: _equal height and width_.
 
@@ -64,6 +65,7 @@ The current build is hosted at [https://pass2024-badge-maker.netlify.app/](https
 You can build and run your own host:
 
 ### Get the code
+
 ```bash
 git clone git@github.com:nurih/pass-badge-maker.git
 cd pass-badge-maker
@@ -72,12 +74,14 @@ cd pass-badge-maker
 ### Build / Run
 
 Using `NPM`
+
 ```bash
 npm install
 npm run dev
 ```
 
 Using `Bun`
+
 ```bash
 bun install
 bun run dev
